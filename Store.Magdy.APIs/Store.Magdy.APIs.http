@@ -1,0 +1,6 @@
+@Store.Magdy.APIs_HostAddress = http://localhost:5012
+
+GET {{Store.Magdy.APIs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
