@@ -1,4 +1,5 @@
 ﻿using Store.Magdy.Core.Entities;
+using Store.Magdy.Core.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace Store.Magdy.Core.Repositories.Contract
     {
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity> GetAsync(TKey id);
+        Task<IEnumerable<TEntity>> GetAllWithSpecsAsync(ISpecifications<TEntity, TKey> spec);
+        Task<TEntity> GetWithSpecsAsync(ISpecifications<TEntity, TKey> spec);
         Task AddAsync(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);

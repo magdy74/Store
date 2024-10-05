@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Store.Magdy.Core.Entities;
 using Store.Magdy.Core.Repositories.Contract;
+using Store.Magdy.Core.Specifications;
 using Store.Magdy.Repository.Data.Contexts;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace Store.Magdy.Repository.Repositories
         {
             if (typeof(TEntity) == typeof(Product))
             {
-                return await _context.Products.Include(P => P.Brand).Include(P => P.Type).FirstOrDefaultAsync(P => P.Id == id as int?) as TEntity;
+                return await _context.Products.Where(P => P.Id == id as int?).Include(P => P.Brand).Include(P => P.Type).FirstOrDefaultAsync() as TEntity;
             }
 
             return await _context.Set<TEntity>().FindAsync(id);
@@ -52,6 +53,23 @@ namespace Store.Magdy.Repository.Repositories
         public void Delete(TEntity entity)
         {
             _context.Remove(entity);
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllWithSpecsAsync(ISpecifications<TEntity, TKey> spec)
+        {
+
+            return await ApplySpecifications(spec).ToListAsync();
+        }
+
+        public async Task<TEntity> GetWithSpecsAsync(ISpecifications<TEntity, TKey> spec)
+        {
+
+            return await ApplySpecifications(spec).FirstOrDefaultAsync();
+        }
+
+        private IQueryable<TEntity> ApplySpecifications(ISpecifications<TEntity, TKey>  spec)
+        {
+            return SpecificationsEvaluator<TEntity, TKey>.GetQuery(_context.Set<TEntity>(), spec);
         }
 
     }

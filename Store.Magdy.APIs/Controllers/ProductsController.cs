@@ -16,10 +16,11 @@ namespace Store.Magdy.APIs.Controllers
         }
 
 
-        [HttpGet] // Get BaseUrl/api/Products 
-        public async Task<IActionResult> GetAllProdcuts() //endpoint
+        [HttpGet] // Get BaseUrl/api/Products?sort
+        // Name, PriceAsc, PriceDesc
+        public async Task<IActionResult> GetAllProdcuts([FromQuery] string? sort, [FromQuery] int? brandId, [FromQuery] int? typeId) //endpoint
         {
-            var result = await _productService.GetAllProductsAsync();
+            var result = await _productService.GetAllProductsAsync(sort, brandId, typeId);
 
             return Ok(result); // 200
         }

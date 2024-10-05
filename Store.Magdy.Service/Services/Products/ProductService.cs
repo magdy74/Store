@@ -3,6 +3,7 @@ using Store.Magdy.Core;
 using Store.Magdy.Core.Dtos.Products;
 using Store.Magdy.Core.Entities;
 using Store.Magdy.Core.Services.Contract;
+using Store.Magdy.Core.Specifications.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +23,12 @@ namespace Store.Magdy.Service.Services.Products
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
-         => _mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.Repository<Product, int>().GetAllAsync());
+        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(string? sort, int? brandId, int? typeId)
+        {
+            var spec = new ProductSpecification(sort, brandId, typeId);
+
+            return _mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.Repository<Product, int>().GetAllWithSpecsAsync(spec));
+        }
 
 
         public async Task<IEnumerable<TypeBrandDto>> GetAllTypesAsync()
@@ -34,7 +39,8 @@ namespace Store.Magdy.Service.Services.Products
 
         public async Task<ProductDto> GetProductByIdAsync(int id)
         {
-            var product = await _unitOfWork.Repository<Product, int>().GetAsync(id);
+            var spec = new ProductSpecification(id);
+            var product = await _unitOfWork.Repository<Product, int>().GetWithSpecsAsync(spec);
             var mappedProduct = _mapper.Map<ProductDto>(product);
             return mappedProduct;
         }
