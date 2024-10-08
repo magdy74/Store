@@ -10,9 +10,13 @@ namespace Store.Magdy.Core.Specifications.Products
     public class ProductSpecification : BaseSpecifications<Product, int>
     {
 
-        public ProductSpecification(string? sort, int? brandId, int? typeId) : base
+        public ProductSpecification(ProductSpecParams productSpec) : base
             (
-                P => (!brandId.HasValue || P.BrandId == brandId) && (!typeId.HasValue || P.TypeId == typeId)
+                P =>
+                (string.IsNullOrEmpty(productSpec.Search) || P.Name.ToLower().Contains(productSpec.Search))
+                &&
+                (!productSpec.brandId.HasValue || P.BrandId == productSpec.brandId) 
+                && (!productSpec.typeId.HasValue || P.TypeId == productSpec.typeId)
             )
         {
             AddIncludes();
@@ -20,30 +24,27 @@ namespace Store.Magdy.Core.Specifications.Products
             // Name, PriceAsc, PriceDesc
             
 
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(productSpec.sort))
             {
-                var result = sort.ToLower();
+                var result = productSpec.sort.ToLower();
                 switch(result) 
                 {
-                    case "name":
-                        OrderBy = P => P.Name;
-                        break;
                     case "priceasc":
-                        OrderBy = P => P.Price;
+                        AddOrderBy(P => P.Price);
                         break;
                     case "pricedesc":
-                        OrderByDescending = P => P.Price;
+                        AddOrderByDescending(P => P.Price);
                         break;
                     default:
-                        OrderBy = P => P.Name;
+                        AddOrderBy(P => P.Name);
                         break;
                 }
             }
             else{
-                OrderBy = P => P.Name;
+                AddOrderBy(P => P.Name);
             }
 
-
+            ApplyPagination(productSpec.pageSize * (productSpec.pageIndex - 1), productSpec.pageSize);
         }
 
         public ProductSpecification(int id)

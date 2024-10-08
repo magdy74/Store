@@ -2,6 +2,7 @@
 using Store.Magdy.Core;
 using Store.Magdy.Core.Dtos.Products;
 using Store.Magdy.Core.Entities;
+using Store.Magdy.Core.Helper;
 using Store.Magdy.Core.Services.Contract;
 using Store.Magdy.Core.Specifications.Products;
 using System;
@@ -23,11 +24,17 @@ namespace Store.Magdy.Service.Services.Products
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(string? sort, int? brandId, int? typeId)
+        public async Task<PaginationResponse<ProductDto>> GetAllProductsAsync(ProductSpecParams productSpec)
         {
-            var spec = new ProductSpecification(sort, brandId, typeId);
+            var spec = new ProductSpecification(productSpec);
 
-            return _mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.Repository<Product, int>().GetAllWithSpecsAsync(spec));
+            var mappedProducts = _mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.Repository<Product, int>().GetAllWithSpecsAsync(spec));
+
+            var countSpec = new ProductWithCountSpecifications(productSpec);
+
+            var count = await _unitOfWork.Repository<Product, int>().GetCountAsync(countSpec);
+
+            return new PaginationResponse<ProductDto>(productSpec.pageSize, productSpec.pageIndex, count, mappedProducts);
         }
 
 

@@ -31,6 +31,11 @@ namespace Store.Magdy.Repository
                 query = query.OrderByDescending(spec.OrderByDescending);
             }
 
+            if (spec.IsPaginationEnabled)
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
+            }
+
             query = spec.Includes.Aggregate(query, (currentQuery, includeExpression) => currentQuery.Include(includeExpression));
             
 

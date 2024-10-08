@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Store.Magdy.Core.Services.Contract;
+using Store.Magdy.Core.Specifications.Products;
 
 namespace Store.Magdy.APIs.Controllers
 {
@@ -18,9 +19,9 @@ namespace Store.Magdy.APIs.Controllers
 
         [HttpGet] // Get BaseUrl/api/Products?sort
         // Name, PriceAsc, PriceDesc
-        public async Task<IActionResult> GetAllProdcuts([FromQuery] string? sort, [FromQuery] int? brandId, [FromQuery] int? typeId) //endpoint
+        public async Task<IActionResult> GetAllProdcuts([FromQuery] ProductSpecParams productSpec) //endpoint
         {
-            var result = await _productService.GetAllProductsAsync(sort, brandId, typeId);
+            var result = await _productService.GetAllProductsAsync(productSpec);
 
             return Ok(result); // 200
         }

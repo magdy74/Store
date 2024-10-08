@@ -1,4 +1,6 @@
 ﻿using Store.Magdy.Core.Dtos.Products;
+using Store.Magdy.Core.Helper;
+using Store.Magdy.Core.Specifications.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ namespace Store.Magdy.Core.Services.Contract
 {
     public interface IProductService
     {
-        Task<IEnumerable<ProductDto>> GetAllProductsAsync(string? sort, int? brandId, int? typeId);
+        Task<PaginationResponse<ProductDto>> GetAllProductsAsync(ProductSpecParams productSpec);
         Task<IEnumerable<TypeBrandDto>> GetAllTypesAsync();
         Task<IEnumerable<TypeBrandDto>> GetAllBrandsAsync();
         Task<ProductDto> GetProductByIdAsync(int id);
