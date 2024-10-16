@@ -11,6 +11,16 @@ using Store.Magdy.Core.Repositories.Contract;
 using Store.Magdy.Repository.Repositories;
 using StackExchange.Redis;
 using Store.Magdy.Core.Mapping.Baskets;
+using Store.Magdy.Service.Services.Caches;
+using Store.Magdy.Repository.Identity.Contexts;
+using Store.Magdy.Core.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using Store.Magdy.Service.Services.Tokens;
+using Store.Magdy.Service.Services.Users;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Store.Magdy.Core.Mapping.Auth;
 
 namespace Store.Magdy.APIs.Helper
 {
@@ -26,6 +36,8 @@ namespace Store.Magdy.APIs.Helper
             services.AddAutoMapperService(configuration);
             services.ConfigureInvalidStateResponseService();
             services.AddRedisService(configuration);
+            services.AddIdentityService();
+            services.AddAuthenticationService(configuration);
 
 
             return services;
@@ -57,6 +69,11 @@ namespace Store.Magdy.APIs.Helper
                 option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddDbContext<StoreIdentityDbContext>(option =>
+            {
+                option.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));
+            });
+
             return services;
         }
 
@@ -66,6 +83,9 @@ namespace Store.Magdy.APIs.Helper
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
 
             return services;
         }
@@ -75,6 +95,7 @@ namespace Store.Magdy.APIs.Helper
 
             services.AddAutoMapper(M => M.AddProfile(new ProductProfile(configuration)));
             services.AddAutoMapper(M => M.AddProfile(new BasketProfile()));
+            services.AddAutoMapper(M => M.AddProfile(new AuthProfile()));
 
             return services;
         }
@@ -113,6 +134,39 @@ namespace Store.Magdy.APIs.Helper
                 var connect = configuration.GetConnectionString("Redis");
 
                 return ConnectionMultiplexer.Connect(connect);
+            });
+
+            return services;
+        }
+
+        private static IServiceCollection AddIdentityService(this IServiceCollection services)
+        {
+            services.AddIdentity<AppUser, IdentityRole>()
+                    .AddEntityFrameworkStores<StoreIdentityDbContext>();
+
+            return services;
+        }
+
+
+        private static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["Jwt:Issure"],
+                    ValidateAudience = true,
+                    ValidAudience = configuration["Jwt:Audience"],
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+
+                };
             });
 
             return services;

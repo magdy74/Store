@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Store.Magdy.APIs.Attributes;
 using Store.Magdy.APIs.Errors;
 using Store.Magdy.Core.Dtos.Products;
 using Store.Magdy.Core.Helper;
@@ -18,6 +20,8 @@ namespace Store.Magdy.APIs.Controllers
 
         [ProducesResponseType(typeof(PaginationResponse<ProductDto>), StatusCodes.Status200OK)]
         [HttpGet] // Get BaseUrl/api/Products?sort
+        [Cached(100)]
+        [Authorize]
         // Name, PriceAsc, PriceDesc
         public async Task<ActionResult<PaginationResponse<ProductDto>>> GetAllProdcuts([FromQuery] ProductSpecParams productSpec) //endpoint
         {

@@ -2,6 +2,10 @@
 using Store.Magdy.Repository.Data.Contexts;
 using Store.Magdy.Repository.Data;
 using Microsoft.EntityFrameworkCore;
+using Store.Magdy.Repository.Identity.Contexts;
+using Store.Magdy.Repository.Identity.DataSeed;
+using Microsoft.AspNetCore.Identity;
+using Store.Magdy.Core.Entities.Identity;
 
 namespace Store.Magdy.APIs.Helper
 {
@@ -17,6 +21,8 @@ namespace Store.Magdy.APIs.Helper
             var services = scope.ServiceProvider;
 
             var context = services.GetRequiredService<StoreDbContext>();
+            var identityContext = services.GetRequiredService<StoreIdentityDbContext>();
+            var userManager = services.GetRequiredService<UserManager<AppUser>>();
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
 
@@ -24,6 +30,9 @@ namespace Store.Magdy.APIs.Helper
             {
                 await context.Database.MigrateAsync();
                 await StoreDbContextSeed.SeedAsync(context);
+
+                await identityContext.Database.MigrateAsync();
+                await StoreIdentityDbContextSeed.SeedAppUserAsync(userManager);
             }
             catch (Exception ex)
             {
@@ -44,6 +53,7 @@ namespace Store.Magdy.APIs.Helper
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

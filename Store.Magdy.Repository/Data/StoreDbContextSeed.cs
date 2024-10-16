@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.Json;
 using Store.Magdy.Core.Entities;
 using Store.Magdy.Repository.Data.Contexts;
+using Store.Magdy.Core.Entities.Order;
 
 
 namespace Store.Magdy.Repository.Data
@@ -77,8 +78,30 @@ namespace Store.Magdy.Repository.Data
                 }
             }
 
+            if (_context.DeliveryMethods.Count() == 0)
+            {
+                // Brand
+                // 1. Read Data From Json File
+
+                var deliveryData = File.ReadAllText(@"../Store.Magdy.Repository/Data/DataSeed/delivery.json");
+
+                // 2. Convert Json String To List<T>
+
+                var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliveryData);
+
+                // 3. Seed Data To DB
+
+                if (deliveryMethods is not null && deliveryMethods.Count() > 0)
+                {
+                    await _context.DeliveryMethods.AddRangeAsync(deliveryMethods);
+
+                }
+            }
+
             await _context.SaveChangesAsync();
         }
+
+
 
 
     }

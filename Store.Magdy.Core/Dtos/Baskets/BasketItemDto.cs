@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Magdy.Core.Entities
+namespace Store.Magdy.Core.Dtos.Baskets
 {
-    public class BasketItem
+    public class BasketItemDto
     {
         public int Id { get; set; }
         public string ProductName { get; set; }
