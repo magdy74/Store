@@ -43,11 +43,14 @@ namespace Store.Magdy.APIs.Helper
             app.UseMiddleware<ExceptionMiddleware>(); // Configure user defined middleware
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI();
+            //}
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseStatusCodePagesWithReExecute("/error/{0}");
 

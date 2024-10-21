@@ -21,6 +21,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Store.Magdy.Core.Mapping.Auth;
+using Store.Magdy.Service.Services.Orders;
+using Store.Magdy.Service.Services.Baskets;
+using Store.Magdy.Core.Mapping.Orders;
+using Store.Magdy.Service.Services.Payments;
 
 namespace Store.Magdy.APIs.Helper
 {
@@ -85,7 +89,10 @@ namespace Store.Magdy.APIs.Helper
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
             return services;
         }
@@ -96,6 +103,7 @@ namespace Store.Magdy.APIs.Helper
             services.AddAutoMapper(M => M.AddProfile(new ProductProfile(configuration)));
             services.AddAutoMapper(M => M.AddProfile(new BasketProfile()));
             services.AddAutoMapper(M => M.AddProfile(new AuthProfile()));
+            services.AddAutoMapper(M => M.AddProfile(new OrderProfile(configuration)));
 
             return services;
         }
