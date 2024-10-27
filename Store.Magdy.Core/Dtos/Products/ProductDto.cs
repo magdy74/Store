@@ -15,9 +15,9 @@ namespace Store.Magdy.Core.Dtos.Products
         public string PictureUrl { get; set; }
         public decimal Price { get; set; }
         public int? BrandId { get; set; } // FK
-        public string BrandName { get; set; }
+        public string productBrand { get; set; }
         public int? TypeId { get; set; } // FK
-        public string TypeName { get; set; }
+        public string productType { get; set; }
 
 
     }

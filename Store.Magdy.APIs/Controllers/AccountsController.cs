@@ -80,7 +80,9 @@ namespace Store.Magdy.APIs.Controllers
 
             if (user is null) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest));
 
-            return Ok(_mapper.Map<AddressDto>(user.Address));
+            var address = _mapper.Map<AddressDto>(user.Address);
+
+            return Ok(address);
         }
 
         [Authorize]
@@ -100,6 +102,13 @@ namespace Store.Magdy.APIs.Controllers
             if(UpdatedAddress is null) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest));
 
             return Ok(UpdatedAddress);
+        }
+
+
+        [HttpGet("emailexists")]
+        public async Task<bool> EmailExists(string email)
+        {
+            return await _userService.CheckEmailExistsAsync(email);
         }
 
     }

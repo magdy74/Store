@@ -40,6 +40,7 @@ namespace Store.Magdy.APIs.Helper
             services.AddAutoMapperService(configuration);
             services.ConfigureInvalidStateResponseService();
             services.AddRedisService(configuration);
+            services.AddCorsService(configuration);
             services.AddIdentityService();
             services.AddAuthenticationService(configuration);
 
@@ -146,6 +147,24 @@ namespace Store.Magdy.APIs.Helper
 
             return services;
         }
+
+        private static IServiceCollection AddCorsService(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddCors(
+                Options =>
+                {
+                    Options.AddPolicy("MyPolicy", options =>
+                    {
+                        options.AllowAnyHeader();
+                        options.AllowAnyMethod();
+                        options.WithOrigins(configuration["FrontendBaseUrl"]);
+                    });
+                }
+                );
+
+            return services;
+        }
+
 
         private static IServiceCollection AddIdentityService(this IServiceCollection services)
         {

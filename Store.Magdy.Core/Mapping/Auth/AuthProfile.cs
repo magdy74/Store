@@ -13,7 +13,10 @@ namespace Store.Magdy.Core.Mapping.Auth
     {
         public AuthProfile()
         {
-            CreateMap<Address, AddressDto>().ReverseMap();
+            CreateMap<Address, AddressDto>()
+                .ForMember(d => d.FirstName, options => options.MapFrom(d => d.FName))
+                .ForMember(d => d.LastName, options => options.MapFrom(d => d.LName))
+                .ReverseMap();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Store.Magdy.Core.Services.Contract
 {
     public interface IOrderService
     {
-        Task<Order> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress);
+        Task<Order> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, AddressOrder shippingAddress);
         Task<IEnumerable<Order>?> GetOrdersOfSpecificUserAsync(string buyerEmail);
         Task<Order?> GetOrderOfSpecificUserAsync(string buyerEmail, int orderId);
     }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Store.Magdy.Core.Dtos.Auth;
 using Store.Magdy.Core.Dtos.Oders;
+using Store.Magdy.Core.Entities.Identity;
 using Store.Magdy.Core.Entities.Order;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Store.Magdy.Core.Mapping.Orders
                 .ForMember(d => d.DeliveryMethod, options => options.MapFrom(s => s.DeliveryMethod.ShortName))
                 .ForMember(d => d.DeliveryMethodCost, options => options.MapFrom(s => s.DeliveryMethod.Cost));
 
-            CreateMap<Address, AddressDto>().ReverseMap();
+            CreateMap<AddressOrder, AddressDto>().ReverseMap();
 
             CreateMap<OrderItem, OrderItemDto>()
                 .ForMember(d => d.ProductId, options => options.MapFrom(s => s.Product.ProductId))

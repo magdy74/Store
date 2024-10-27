@@ -21,7 +21,6 @@ namespace Store.Magdy.APIs.Controllers
         [ProducesResponseType(typeof(PaginationResponse<ProductDto>), StatusCodes.Status200OK)]
         [HttpGet] // Get BaseUrl/api/Products?sort
         [Cached(100)]
-        [Authorize]
         // Name, PriceAsc, PriceDesc
         public async Task<ActionResult<PaginationResponse<ProductDto>>> GetAllProdcuts([FromQuery] ProductSpecParams productSpec) //endpoint
         {

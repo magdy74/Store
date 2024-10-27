@@ -33,7 +33,6 @@ namespace Store.Magdy.Service.Services.Tokens
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.GivenName, user.DisplayName),
-                new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
 
             };
 

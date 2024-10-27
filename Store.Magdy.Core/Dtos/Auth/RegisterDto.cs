@@ -15,9 +15,6 @@ namespace Store.Magdy.Core.Dtos.Auth
         
         [Required(ErrorMessage = "Display Name is Required !")]
         public string DisplayName { get; set; }
-        
-        [Required(ErrorMessage = "PhoneNumber is Required !")]
-        public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Password is Required !")]
         public string Password { get; set; }

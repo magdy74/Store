@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Store.Magdy.Core.Entities.Order
 {
-    public class Address
+    public class AddressOrder
     {
-        public Address()
+        public AddressOrder()
         {
             
         }
-        public Address(string firstName, string lastName, string city, string street, string country)
+        public AddressOrder(string firstName, string lastName, string city, string street, string country)
         {
             FirstName = firstName;
             LastName = lastName;

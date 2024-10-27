@@ -54,7 +54,6 @@ namespace Store.Magdy.Service.Services.Users
             {
                 Email = registrDto.Email,
                 DisplayName = registrDto.DisplayName,
-                PhoneNumber = registrDto.PhoneNumber,
                 UserName = registrDto.Email.Split("@")[0],
             };
 

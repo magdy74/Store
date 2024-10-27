@@ -30,7 +30,7 @@ namespace Store.Magdy.APIs.Controllers
 
             if(userEmail is null) return Unauthorized(new ApiErrorResponse(StatusCodes.Status401Unauthorized));
 
-            var address = _mapper.Map<Address>(model.shipToAddress);
+            var address = _mapper.Map<AddressOrder>(model.shipToAddress);
 
             var order = await _orderService.CreateOrderAsync(userEmail, model.BasketId, model.DeliveryMethodId, address);
 

@@ -25,7 +25,7 @@ namespace Store.Magdy.Service.Services.Orders
             _paymentService = paymentService;
         }
 
-        public async Task<Order> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
+        public async Task<Order> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, AddressOrder shippingAddress)
         {
             var basket = await _basketService.GetBasketAsync(basketId);
 
@@ -55,7 +55,10 @@ namespace Store.Magdy.Service.Services.Orders
             {
                 var spec = new OrderSpecificationWithPaymentIntentId(basket.PaymentIntentId);
                 var ExOrder = await _unitOfWork.Repository<Order, int>().GetWithSpecsAsync(spec);
-                _unitOfWork.Repository<Order, int>().Delete(ExOrder);
+                if(ExOrder is not null)
+                {
+                    _unitOfWork.Repository<Order, int>().Delete(ExOrder);
+                }
             }
 
             var basketDto = await _paymentService.CreateOrUpdatePaymentIntentIdAsync(basketId);

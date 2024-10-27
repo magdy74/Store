@@ -14,7 +14,7 @@ namespace Store.Magdy.Core.Entities.Order
             
         }
 
-        public Order(string buyerEmail, Address shippingAddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subTotal, string paymentIntentId)
+        public Order(string buyerEmail, AddressOrder shippingAddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subTotal, string paymentIntentId)
         {
             BuyerEmail = buyerEmail;
             ShippingAddress = shippingAddress;
@@ -27,7 +27,7 @@ namespace Store.Magdy.Core.Entities.Order
         public string BuyerEmail { get; set; }
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
-        public Address ShippingAddress { get; set; }
+        public AddressOrder ShippingAddress { get; set; }
         public int DeliveryMethodId { get; set; }
         public DeliveryMethod DeliveryMethod { get; set; }
         public ICollection<OrderItem> Items { get; set; }
